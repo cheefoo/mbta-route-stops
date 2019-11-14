@@ -26,16 +26,28 @@ public class MbtaRequestApp
         List<RouteRequest> routeRequestList = callRouteAPI("https://api-v3.mbta.com/routes?");
         Map<String, Integer> map = new HashMap();
         Map<String, List<RouteStop>> routeStopMap;
-        List<Map<String, List<RouteStop>>> allRouteStopList = new ArrayList<>();
+
+        //List<Map<String, List<RouteStop>>> allRouteStopList = new ArrayList<>();
+        List<Map<String, List<String>>> allRouteStopList = new ArrayList<>();
         List<String> routeNameList = new ArrayList<>();
+        int k = 0;
         for(RouteRequest routeRequest: routeRequestList)
         {
             System.out.println(routeRequest.getRouteRequestAttribute().getLong_name());
             routeNameList.add(routeRequest.getId());
             routeStopMap = callStopAPI("https://api-v3.mbta.com/stops?", routeRequest.getId());
-            allRouteStopList.add(routeStopMap);
+            List<String> list = new ArrayList<>();
+            Map<String, List<String>> routeStopAttributeNamesMap = new HashMap<>();
+            for(int i = 0; i < routeStopMap.get(routeRequest.getId()).size(); i++)
+            {
+                list.add(routeStopMap.get(routeRequest.getId()).get(i).getRouteStopAttribute().getName());
+            }
+            routeStopAttributeNamesMap.put(routeRequest.getId(),list);
+            //allRouteStopList.add(routeStopMap);
+            allRouteStopList.add(routeStopAttributeNamesMap);
             map.put(routeRequest.getRouteRequestAttribute().getLong_name(),routeStopMap.get(routeRequest.getId()).size());
             System.out.println("Size of  " + routeRequest.getId() + " is " + routeStopMap.get(routeRequest.getId()).size());
+            k++;
         }
         System.out.println("Size of routeNames is " + routeNameList.size());
         System.out.println("Size of allRouteStopList is " + allRouteStopList.size());
@@ -49,12 +61,43 @@ public class MbtaRequestApp
         for(int j=0; j<routeNameList.size(); j++)
         {
             List list = allRouteStopList.get(j).get(routeNameList.get(j));
+            System.out.println(routeNameList.get(j));
         }
 
-        //two stops
+        List<String> redRouteStopList = allRouteStopList.get(0).get(routeNameList.get(0));
+        List<String> mattapanRouteStopList = allRouteStopList.get(1).get(routeNameList.get(1));
+        List<String> orangeRouteStopList = allRouteStopList.get(2).get(routeNameList.get(2));
+        List<String> green_B_RouteStopList = allRouteStopList.get(3).get(routeNameList.get(3));
+        List<String> green_C_RouteStopList = allRouteStopList.get(4).get(routeNameList.get(4));
+        List<String> green_D_RouteStopList = allRouteStopList.get(5).get(routeNameList.get(5));
+        List<String> green_E_RouteStopList = allRouteStopList.get(6).get(routeNameList.get(6));
+        List<String> blueRouteStopList = allRouteStopList.get(7).get(routeNameList.get(7));
+
+        Collections.sort(redRouteStopList);
+        Collections.sort(mattapanRouteStopList);
+        Collections.sort(orangeRouteStopList);
+        Collections.sort(green_B_RouteStopList);
+        Collections.sort(green_C_RouteStopList);
+        Collections.sort(green_D_RouteStopList);
+        Collections.sort(green_E_RouteStopList);
+        Collections.sort(blueRouteStopList);
+
+        System.out.println("redRouteStopList" + redRouteStopList);
+        System.out.println("mattapanRouteStopList" + mattapanRouteStopList);
+        System.out.println("orangeRouteStopList" + orangeRouteStopList);
+        System.out.println("green_B_RouteStopList" + green_B_RouteStopList);
+        System.out.println("green_C_RouteStopList" + green_C_RouteStopList);
+        System.out.println("green_D_RouteStopList" + green_D_RouteStopList);
+        System.out.println("green_E_RouteStopList" + green_E_RouteStopList);
+        System.out.println("blueRouteStopList" + blueRouteStopList);
+
+        Set<String> intersection = findIntersection(new HashSet<>(),
+                redRouteStopList
+                ,green_D_RouteStopList, green_E_RouteStopList);
+
+        System.out.println(intersection);
 
 
-        //three stops
 
 
 
@@ -174,5 +217,17 @@ public class MbtaRequestApp
         return map;
     }
 
-
+    public static <T, C extends Collection<T>> C findIntersection(C newCollection,
+                                                                  Collection<T>... collections) {
+        boolean first = true;
+        for (Collection<T> collection : collections) {
+            if (first) {
+                newCollection.addAll(collection);
+                first = false;
+            } else {
+                newCollection.retainAll(collection);
+            }
+        }
+        return newCollection;
+    }
 }
