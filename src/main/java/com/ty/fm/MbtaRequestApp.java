@@ -65,33 +65,9 @@ public class MbtaRequestApp
         List<String> green_D_RouteStopList = allRoutesStopMap.get("Green-D");
         List<String> green_E_RouteStopList = allRoutesStopMap.get("Green-E");
         List<String> blueRouteStopList = allRoutesStopMap.get("Blue");
-        List<List<String>> meList = new ArrayList<>();
-        meList.add(redRouteStopList);
-        meList.add(mattapanRouteStopList);
-        meList.add(orangeRouteStopList);
-        meList.add(green_B_RouteStopList);
-        meList.add(green_C_RouteStopList);
-        meList.add(green_D_RouteStopList);
-        meList.add(green_E_RouteStopList);
-        meList.add(blueRouteStopList);
 
-       /* Collections.sort(redRouteStopList);
-        Collections.sort(mattapanRouteStopList);
-        Collections.sort(orangeRouteStopList);
-        Collections.sort(green_B_RouteStopList);
-        Collections.sort(green_C_RouteStopList);
-        Collections.sort(green_D_RouteStopList);
-        Collections.sort(green_E_RouteStopList);
-        Collections.sort(blueRouteStopList);
 
-        System.out.println("redRouteStopList" + redRouteStopList);
-        System.out.println("mattapanRouteStopList" + mattapanRouteStopList);
-        System.out.println("orangeRouteStopList" + orangeRouteStopList);
-        System.out.println("green_B_RouteStopList" + green_B_RouteStopList);
-        System.out.println("green_C_RouteStopList" + green_C_RouteStopList);
-        System.out.println("green_D_RouteStopList" + green_D_RouteStopList);
-        System.out.println("green_E_RouteStopList" + green_E_RouteStopList);
-        System.out.println("blueRouteStopList" + blueRouteStopList);*/
+
 
         //Red Stop
         Set<String> intersection = MbtaUtils.findIntersection(new HashSet<>(),
