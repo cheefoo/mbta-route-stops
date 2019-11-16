@@ -3,6 +3,7 @@ package com.ty.fm;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
 import com.ty.fm.models.RouteRequest;
 import com.ty.fm.models.RouteRequestList;
@@ -25,159 +26,116 @@ public class MbtaRequestApp
     public static void main (String []args) throws IOException
     {
 
-        List<RouteRequest> routeRequestList = callRouteAPI("https://api-v3.mbta.com/routes?");
+        List<RouteRequest> routeRequestList = MbtaUtils.callRouteAPI("https://api-v3.mbta.com/routes?");
         Map<String, Integer> map = new HashMap();
-        Map<String, List<RouteStop>> routeStopMap;
+        Map<String, List<RouteStop>> routeStopMap = new HashMap<>();
 
-        List<Map<String, List<String>>> allRouteStopList = new ArrayList<>();
+       // List<Map<String, List<String>>> allRouteStopList = new ArrayList<>();
 
-        Multimap<String, String> allRoutesStopMap = ArrayListMultimap.create();
+        ListMultimap<String, String> allRoutesStopMap = ArrayListMultimap.create();
 
         List<String> routeNameList = new ArrayList<>();
         for(RouteRequest routeRequest: routeRequestList)
         {
             System.out.println(routeRequest.getRouteRequestAttribute().getLong_name());
             routeNameList.add(routeRequest.getId());
-            routeStopMap = callStopAPI("https://api-v3.mbta.com/stops?", routeRequest.getId());
-            //List<String> list = new ArrayList<>();
-            //Map<String, List<String>> routeStopAttributeNamesMap = new HashMap<>();
+            routeStopMap = MbtaUtils.callStopAPI("https://api-v3.mbta.com/stops?", routeRequest.getId());
             for(int i = 0; i < routeStopMap.get(routeRequest.getId()).size(); i++)
             {
-                //list.add(routeStopMap.get(routeRequest.getId()).get(i).getRouteStopAttribute().getName());
                 allRoutesStopMap.put(routeRequest.getId(),routeStopMap.get(routeRequest.getId()).get(i).getRouteStopAttribute().getName());
             }
             map.put(routeRequest.getRouteRequestAttribute().getLong_name(),routeStopMap.get(routeRequest.getId()).size());
             System.out.println("Size of  " + routeRequest.getId() + " is " + routeStopMap.get(routeRequest.getId()).size());
         }
         System.out.println("Size of routeNames is " + routeNameList.size());
-        System.out.println("Size of allRouteStopList is " + allRouteStopList.size());
-        Map.Entry maxValueEntry = maxUsingCollectionsMaxAndLambda(map);
+        System.out.println("RouteStop Map " + routeStopMap);
+        Map.Entry maxValueEntry = MbtaUtils.maxUsingCollectionsMaxAndLambda(map);
         System.out.println("Subway route with most number of stops is " + maxValueEntry.getKey() + " " + "  and MaxValue is " + maxValueEntry.getValue());
 
-        Map.Entry minValueEntry = minUsingCollectionsMaxAndLambda(map);
+        Map.Entry minValueEntry = MbtaUtils.minUsingCollectionsMaxAndLambda(map);
         System.out.println("Subway route with fewest number of stops is " + minValueEntry.getKey() + " " + "  and MinValue is " + minValueEntry.getValue());
 
         System.out.println(allRoutesStopMap);
 
+        List<String> redRouteStopList = allRoutesStopMap.get("Red");
+        List<String> mattapanRouteStopList = allRoutesStopMap.get("Mattapan");
+        List<String> orangeRouteStopList = allRoutesStopMap.get("Orange");
+        List<String> green_B_RouteStopList = allRoutesStopMap.get("Green-B");
+        List<String> green_C_RouteStopList = allRoutesStopMap.get("Green-C");
+        List<String> green_D_RouteStopList = allRoutesStopMap.get("Green-D");
+        List<String> green_E_RouteStopList = allRoutesStopMap.get("Green-E");
+        List<String> blueRouteStopList = allRoutesStopMap.get("Blue");
+        List<List<String>> meList = new ArrayList<>();
+        meList.add(redRouteStopList);
+        meList.add(mattapanRouteStopList);
+        meList.add(orangeRouteStopList);
+        meList.add(green_B_RouteStopList);
+        meList.add(green_C_RouteStopList);
+        meList.add(green_D_RouteStopList);
+        meList.add(green_E_RouteStopList);
+        meList.add(blueRouteStopList);
 
+       /* Collections.sort(redRouteStopList);
+        Collections.sort(mattapanRouteStopList);
+        Collections.sort(orangeRouteStopList);
+        Collections.sort(green_B_RouteStopList);
+        Collections.sort(green_C_RouteStopList);
+        Collections.sort(green_D_RouteStopList);
+        Collections.sort(green_E_RouteStopList);
+        Collections.sort(blueRouteStopList);
+
+        System.out.println("redRouteStopList" + redRouteStopList);
+        System.out.println("mattapanRouteStopList" + mattapanRouteStopList);
+        System.out.println("orangeRouteStopList" + orangeRouteStopList);
+        System.out.println("green_B_RouteStopList" + green_B_RouteStopList);
+        System.out.println("green_C_RouteStopList" + green_C_RouteStopList);
+        System.out.println("green_D_RouteStopList" + green_D_RouteStopList);
+        System.out.println("green_E_RouteStopList" + green_E_RouteStopList);
+        System.out.println("blueRouteStopList" + blueRouteStopList);*/
+
+        //Red Stop
+        Set<String> intersection = MbtaUtils.findIntersection(new HashSet<>(),
+                redRouteStopList
+                ,mattapanRouteStopList);
+
+        System.out.println("Red-Mattapan : " + intersection);
+
+        Set<String> intersection2 = MbtaUtils.findIntersection(new HashSet<>(),
+                redRouteStopList
+                ,orangeRouteStopList);
+
+        System.out.println("Red-Orange : " + intersection2);
+
+        Set<String> intersection3 = MbtaUtils.findIntersection(new HashSet<>(),
+                redRouteStopList
+                ,green_B_RouteStopList);
+
+        System.out.println("Red-Green-B : " + intersection3);
+
+        Set<String> intersection4 = MbtaUtils.findIntersection(new HashSet<>(),
+                redRouteStopList
+                ,green_C_RouteStopList);
+
+        System.out.println("Red-Green-c : " + intersection4);
+
+        Set<String> intersection6 = MbtaUtils.findIntersection(new HashSet<>(),
+                redRouteStopList
+                ,green_D_RouteStopList);
+
+        System.out.println("Red-Green-D : " + intersection6);
+
+        Set<String> intersection7 = MbtaUtils.findIntersection(new HashSet<>(),
+                redRouteStopList
+                ,green_E_RouteStopList);
+
+        System.out.println("Red-Green-E : " + intersection7);
+
+        Set<String> intersection8 = MbtaUtils.findIntersection(new HashSet<>(),
+                redRouteStopList
+                ,blueRouteStopList);
+
+        System.out.println("Red-Blue : " + intersection8);
 
     }
 
-    public static <K, V extends Comparable<V>> Map.Entry<K, V> maxUsingCollectionsMaxAndLambda(Map<K, V> map) {
-        Map.Entry<K, V> maxEntry = Collections.max(map.entrySet(), (Map.Entry<K, V> e1, Map.Entry<K, V> e2) -> e1.getValue()
-                .compareTo(e2.getValue()));
-        return maxEntry;
-    }
-
-    public static <K, V extends Comparable<V>> Map.Entry<K, V> minUsingCollectionsMaxAndLambda(Map<K, V> map) {
-        Map.Entry<K, V> minEntry = Collections.min(map.entrySet(), (Map.Entry<K, V> e1, Map.Entry<K, V> e2) -> e1.getValue()
-                .compareTo(e2.getValue()));
-        return minEntry;
-    }
-
-    private static List<RouteRequest> callRouteAPI(String urlString) throws IOException
-    {
-        String query = String.format("filter[type]=%s",
-                URLEncoder.encode("0,1", "UTF-8"));
-
-        //URL url = new URL("https://api-v3.mbta.com/routes");
-        URL url = new URL(urlString+query);
-
-        //System.out.println("URL is " + url);
-
-        HttpURLConnection con = (HttpURLConnection)url.openConnection();
-        //con.setRequestMethod("POST");
-        con.setRequestMethod("GET");
-
-        con.setRequestProperty("Content-Type", "application/vnd.api+json; utf-8");
-        //con.setRequestProperty("Accept", "application/json");
-        con.setRequestProperty("Accept", "application/vnd.api+json");
-        con.setDoOutput(true);
-
-        int code = con.getResponseCode();
-        System.out.println(code);
-        RouteRequestList routeRequestList;
-
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8")))
-        {
-            StringBuilder response = new StringBuilder();
-            String responseLine = null;
-            while ((responseLine = br.readLine()) != null)
-            {
-                response.append(responseLine.trim());
-                //InputStream targetStream = new ByteArrayInputStream(responseLine.getBytes());
-                //System.out.println(responseLine.trim() + "\n");
-
-            }
-            ObjectMapper mapper = new ObjectMapper();
-
-            TypeReference<RouteRequestList> mapType = new TypeReference<RouteRequestList>() {};
-            routeRequestList = mapper.readValue(response.toString(), mapType);
-            //System.out.println("Size is " + routeRequestList.getRouteRequestList().size());
-
-        }
-
-        return routeRequestList.getRouteRequestList();
-    }
-
-    //curl -X GET "https://api-v3.mbta.com/stops?filter%5Broute%5D=Orange" -H "accept: application/vnd.api+json"
-    private static Map<String, List<RouteStop>> callStopAPI(String urlString, String stop) throws IOException
-    {
-        Map <String, List<RouteStop>> map = new HashMap<>();
-        String query = String.format("filter[route]=%s",
-                URLEncoder.encode(stop, "UTF-8"));
-
-        //URL url = new URL("https://api-v3.mbta.com/routes");
-        URL url = new URL(urlString+query);
-
-        //System.out.println("URL is " + url);
-
-        HttpURLConnection con = (HttpURLConnection)url.openConnection();
-        //con.setRequestMethod("POST");
-        con.setRequestMethod("GET");
-
-        con.setRequestProperty("Content-Type", "application/vnd.api+json; utf-8");
-        //con.setRequestProperty("Accept", "application/json");
-        con.setRequestProperty("Accept", "application/vnd.api+json");
-        con.setDoOutput(true);
-
-        int code = con.getResponseCode();
-        System.out.println(code);
-        RouteStops routeStopsList;
-
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8")))
-        {
-            StringBuilder response = new StringBuilder();
-            String responseLine = null;
-            while ((responseLine = br.readLine()) != null)
-            {
-                response.append(responseLine.trim());
-                //InputStream targetStream = new ByteArrayInputStream(responseLine.getBytes());
-                //System.out.println(responseLine.trim() + "\n");
-
-            }
-            ObjectMapper mapper = new ObjectMapper();
-
-            TypeReference<RouteStops> mapType = new TypeReference<RouteStops>() {};
-            routeStopsList = mapper.readValue(response.toString(), mapType);
-            //System.out.println("Size is " + routeStopsList.getRouteStopList().size());
-
-        }
-        map.put(stop,routeStopsList.getRouteStopList());
-        return map;
-    }
-
-    public static <T, C extends Collection<T>> C findIntersection(C newCollection,
-                                                                  Collection<T>... collections) {
-        boolean first = true;
-        for (Collection<T> collection : collections) {
-            if (first) {
-                newCollection.addAll(collection);
-                first = false;
-            } else {
-                newCollection.retainAll(collection);
-            }
-        }
-        return newCollection;
-    }
 }

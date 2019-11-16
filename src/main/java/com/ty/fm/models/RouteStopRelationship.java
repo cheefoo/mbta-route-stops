@@ -16,4 +16,14 @@ public class RouteStopRelationship
     @JsonProperty("zone")
     private RelationshipsZone relationshipsZone;
 
+    @Override
+    public String toString() {
+        return "RouteStopRelationship{" +
+                "relationshipsChildStop=" + relationshipsChildStop +
+                ", relationshipsFacilities=" + relationshipsFacilities +
+                ", relationshipsParentStation=" + relationshipsParentStation +
+                ", relationshipRecommendedTransfers=" + relationshipRecommendedTransfers +
+                ", relationshipsZone=" + relationshipsZone +
+                '}';
+    }
 }

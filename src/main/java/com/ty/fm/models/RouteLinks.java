@@ -16,4 +16,11 @@ public class RouteLinks
 {
     @JsonProperty("self")
     private String self;
+
+    @Override
+    public String toString() {
+        return "RouteLinks{" +
+                "self='" + self + '\'' +
+                '}';
+    }
 }

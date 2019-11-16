@@ -40,4 +40,23 @@ public class RouteStopAttribute
     private String   vehicle_type;
     @JsonProperty("wheelchair_boarding")
     private String   wheelchair_boarding;
+
+    @Override
+    public String toString() {
+        return "RouteStopAttribute{" +
+                "address='" + address + '\'' +
+                ", at_street='" + at_street + '\'' +
+                ", description='" + description + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", location_type='" + location_type + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", municipality='" + municipality + '\'' +
+                ", name='" + name + '\'' +
+                ", on_street='" + on_street + '\'' +
+                ", platform_code='" + platform_code + '\'' +
+                ", platform_name='" + platform_name + '\'' +
+                ", vehicle_type='" + vehicle_type + '\'' +
+                ", wheelchair_boarding='" + wheelchair_boarding + '\'' +
+                '}';
+    }
 }

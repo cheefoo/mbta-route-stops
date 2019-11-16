@@ -27,4 +27,15 @@ public class RouteStop
     private String type;
     @JsonProperty("links")
     private RouteLinks routeLinks;
+
+    @Override
+    public String toString() {
+        return "RouteStop{" +
+                "routeStopAttribute=" + routeStopAttribute +
+                ", route=" + route +
+                ", id='" + id + '\'' +
+                ", type='" + type + '\'' +
+                ", routeLinks=" + routeLinks +
+                '}';
+    }
 }
